@@ -15,6 +15,7 @@ public class DataManager : MonoBehaviour
     }
 
     public string playerName;
+    public int bestScore;
 
     private void Awake()
     {
@@ -36,6 +37,8 @@ public class DataManager : MonoBehaviour
 
     public void SaveData(int score)
     {
+        if (score < bestScore) { return; }
+
         BestRecordData data = new BestRecordData();
         data.name = playerName;
         data.score = score;
@@ -52,7 +55,10 @@ public class DataManager : MonoBehaviour
         {
             string json = File.ReadAllText(path);
             
-            return JsonUtility.FromJson<BestRecordData>(json);
+            var data = JsonUtility.FromJson<BestRecordData>(json);
+            bestScore = data.score;
+
+            return data;
         }
 
         return null;
